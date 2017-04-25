@@ -32,11 +32,12 @@ export const Display = styled.h1`
   border: 3px solid #444;
   border-radius: 20%;
   margin: 0;
+  height: 35px;
 `
 
 export const StartStrictBtn = styled.div`
   border-radius: 50%
-  background-color: purple;
+  cursor:pointer;
   width: 28px;
   height: 28px;
   border: 4px solid #444;

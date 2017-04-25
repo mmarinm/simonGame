@@ -4,8 +4,13 @@ import {Switch, SwitchOnOff, OnOffStyled, DisplayBoxDiv, Display,
  InlineControlsStyled, Label, StartStrictBtn, ControlerStyled} from './Controler.styles'
  import {colors} from '../../App.styles'
 
-const SwitchBtn = ({gameOn}) => {
-  console.log(gameOn)
+const SwitchBtn = ({gameOn, setGameStatus}) => {
+  function handleClick() {
+    const setGame = gameOn === true ? false : true
+    const setCount =  gameOn === true ? '' : '--';
+    setGameStatus(setGame, setCount);
+  }
+
   const offStyle = {
     backgroundColor: gameOn === false ? "#3193DE" : ""
   }
@@ -14,17 +19,17 @@ const SwitchBtn = ({gameOn}) => {
   }
   return (
     <Switch>
-      <SwitchOnOff className="of" style={offStyle}> </SwitchOnOff>
-      <SwitchOnOff className="on" style={onStyle}> </SwitchOnOff>
+      <SwitchOnOff onClick={handleClick} style={offStyle} > </SwitchOnOff>
+      <SwitchOnOff onClick={handleClick} style={onStyle}> </SwitchOnOff>
     </Switch>
   )
 }
 
-const OnOffControles = () => {
+const OnOffControls = ({setGameStatus, gameOn}) => {
   return (
     <OnOffStyled>
       <span>OFF</span>
-      <SwitchBtn gameOn={false}/>
+      <SwitchBtn gameOn={gameOn} setGameStatus={setGameStatus}/>
       <span>ON</span>
     </OnOffStyled>
   )
@@ -44,32 +49,34 @@ const StartStrictBox = ({color, tag}) => {
   )
 }
 
-const DisplayBox = () => {
+const DisplayBox = ({count}) => {
+
   return (
       <DisplayBoxDiv>
-        <Display>15</Display>
+        <Display>{count}</Display>
         <Label>COUNT</Label>
       </DisplayBoxDiv>
   )
 }
 
-const InlineControles = () => {
+const InlineControls = ({count}) => {
+
   return (
     <InlineControlsStyled>
-      <DisplayBox />
+      <DisplayBox count={count} />
       <StartStrictBox color={colors.red} tag={"START"}/>
       <StartStrictBox color={colors.yellow} tag={"STRICT"}/>
     </InlineControlsStyled>
   )
 }
 
-export const Controler = ({props}) => {
-  console.log(props);
+export const Controler = ({setGameStatus, gameOn, count}) => {
+
   return (
     <ControlerStyled>
       <h1>Simon<span>®</span></h1>
-      <InlineControles />
-      <OnOffControles />
+      <InlineControls count={count} />
+      <OnOffControls setGameStatus={setGameStatus} gameOn={gameOn} />
     </ControlerStyled>
   )
 }
