@@ -10,22 +10,28 @@ class App extends Component {
     super();
     this.state= {
       gameOn: false,
-      count: ""
+      count: "",
+      start: false
     }
 
     this.setGameStatus = this.setGameStatus.bind(this);
+    this.setStartGame = this.setStartGame.bind(this);
   }
 
   setGameStatus(val, setCount){
     this.setState((state) => ({ ...state, gameOn: val, count: setCount}));
   }
 
+  setStartGame(){
+    this.setState((state) => ({ ...state, start: true}));
+  }
+
   render() {
-    const {count, gameOn} = this.state;
+    const {count, gameOn, start} = this.state;
     return (
       <Container>
         <MainCircle />
-        <Controler count={count} gameOn={gameOn} setGameStatus={this.setGameStatus}/>
+        <Controler count={count} gameOn={gameOn} setGameStatus={this.setGameStatus} setStartGame={this.setStartGame} start={start} />
       </Container>
     );
   }

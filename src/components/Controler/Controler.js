@@ -1,81 +1,79 @@
 import React from 'react'
 
-import {Switch, SwitchOnOff, OnOffStyled, DisplayBoxDiv, Display,
+import {Switch, SwitchOnOff, OnOffStyled, DisplayBoxDiv, Display, DisplayNumber,
  InlineControlsStyled, Label, StartStrictBtn, ControlerStyled} from './Controler.styles'
  import {colors} from '../../App.styles'
 
-const SwitchBtn = ({gameOn, setGameStatus}) => {
+const SwitchBtn = (props) => {
   function handleClick() {
-    const setGame = gameOn === true ? false : true
-    const setCount =  gameOn === true ? '' : '--';
-    setGameStatus(setGame, setCount);
+    const setGame = props.gameOn === true ? false : true
+    const setCount =  props.gameOn === true ? '' : '--';
+    props.setGameStatus(setGame, setCount);
   }
 
-  const offStyle = {
-    backgroundColor: gameOn === false ? "#3193DE" : ""
-  }
-  const onStyle = {
-    backgroundColor: gameOn === true ? "#3193DE" : ""
-  }
   return (
-    <Switch>
-      <SwitchOnOff onClick={handleClick} style={offStyle} > </SwitchOnOff>
-      <SwitchOnOff onClick={handleClick} style={onStyle}> </SwitchOnOff>
+    <Switch onClick={handleClick} {...props}>
+      <SwitchOnOff />
     </Switch>
   )
 }
 
-const OnOffControls = ({setGameStatus, gameOn}) => {
+const OnOffControls = (props) => {
   return (
     <OnOffStyled>
       <span>OFF</span>
-      <SwitchBtn gameOn={gameOn} setGameStatus={setGameStatus}/>
+      <SwitchBtn gameOn={props.gameOn} setGameStatus={props.setGameStatus}/>
       <span>ON</span>
     </OnOffStyled>
   )
 }
 
-const StartStrictBox = ({color, tag}) => {
-
-  const divStyle = {
-    backgroundColor: color
+const StartStrictBox = (props) => {
+  const {tag, gameOn, setStartGame} = props
+  function handleClick() {
+    if(tag === "START" && gameOn) {
+      // start game to flash and start sequence
+      setStartGame();
+    }
   }
 
   return (
     <DisplayBoxDiv>
-      <StartStrictBtn style={divStyle} />
+      <StartStrictBtn onClick={handleClick} {...props} />
       <Label>{tag}</Label>
     </DisplayBoxDiv>
   )
 }
 
-const DisplayBox = ({count}) => {
-
+const DisplayBox = (props) => {
+  const {count} = props
   return (
       <DisplayBoxDiv>
-        <Display>{count}</Display>
+        <Display >
+          <DisplayNumber {...props}>{count}</DisplayNumber>
+        </Display>
         <Label>COUNT</Label>
       </DisplayBoxDiv>
   )
 }
 
-const InlineControls = ({count}) => {
-
+const InlineControls = (props) => {
+  const {count, gameOn, setStartGame, start} = props
   return (
     <InlineControlsStyled>
-      <DisplayBox count={count} />
-      <StartStrictBox color={colors.red} tag={"START"}/>
+      <DisplayBox count={count} gameOn={gameOn} start={start}/>
+      <StartStrictBox gameOn={gameOn} color={colors.red} tag={"START"} setStartGame={setStartGame}/>
       <StartStrictBox color={colors.yellow} tag={"STRICT"}/>
     </InlineControlsStyled>
   )
 }
 
-export const Controler = ({setGameStatus, gameOn, count}) => {
-
+export const Controler = (props) => {
+  const {setGameStatus, gameOn, count, setStartGame, start} = props
   return (
     <ControlerStyled>
       <h1>Simon<span>®</span></h1>
-      <InlineControls count={count} />
+      <InlineControls count={count} gameOn={gameOn} setStartGame={setStartGame} start={start}/>
       <OnOffControls setGameStatus={setGameStatus} gameOn={gameOn} />
     </ControlerStyled>
   )

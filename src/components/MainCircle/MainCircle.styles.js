@@ -16,4 +16,9 @@ export const Maincircle = styled.div`
   `
   export const FieldStyled = styled.div`
     width: 50%;
+    background-color: ${(props) => props.color}
+    border-${(props) => props.borderRight}: 12px solid #444
+    border-${(props) => props.borderBottom}: 12px solid #444
+    border-${(props) => props.borderLeft}: 12px solid #444
+    border-${(props) => props.borderTop}: 12px solid #444
   `

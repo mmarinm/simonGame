@@ -1,4 +1,19 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const flash = keyframes`
+   0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+
+  100% {
+    opacity: 1;
+  }
+`;
 
 export const ControlerStyled = styled.div`
   position: absolute;
@@ -26,13 +41,21 @@ export const Label = styled.h3`
   margin-bottom: 0;
 `
 
-export const Display = styled.h1`
+export const Display = styled.div`
   background-color: #32050C;
   color: #DC0A16;
   border: 3px solid #444;
   border-radius: 20%;
   margin: 0;
   height: 35px;
+`
+
+export const DisplayNumber = styled.h1`
+  margin: 0;
+  padding: 0;
+  animation: ${
+  (props) => props.gameOn && props.count === "--" && props.start ? flash : ""
+} 2s 2;
 `
 
 export const StartStrictBtn = styled.div`
@@ -42,6 +65,9 @@ export const StartStrictBtn = styled.div`
   height: 28px;
   border: 4px solid #444;
   margin: 5px auto 0 auto;
+  background-color: ${
+    (props) => props.color
+  }
 `
 
 export const OnOffStyled = styled.div`
@@ -59,10 +85,13 @@ export const Switch = styled.div`
   cursor: pointer;
   margin: 0 10px;
   display: flex;
+  flex-direction: ${(props) => props.gameOn ? "row-reverse" : "row"}
 `
 
 export const SwitchOnOff = styled.div`
-  width: 50%;
+  width: 45%;
   height: 80%;
   border: 2px solid #333;
+  background-color: #3193DE;
+  };
 `
