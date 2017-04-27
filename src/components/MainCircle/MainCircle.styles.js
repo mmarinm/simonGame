@@ -13,12 +13,25 @@ export const Maincircle = styled.div`
     display: flex;
     flex-direction: row;
     height: 100%;
+    border-${(props) =>
+      props.border }: 12px solid #444;
   `
-  export const FieldStyled = styled.div`
+  export const Column = styled.div`
+    background-color: red;
     width: 50%;
-    background-color: ${(props) => props.color}
-    border-${(props) => props.borderRight}: 12px solid #444
-    border-${(props) => props.borderBottom}: 12px solid #444
-    border-${(props) => props.borderLeft}: 12px solid #444
-    border-${(props) => props.borderTop}: 12px solid #444
+    border-${(props) =>
+      props.border }: 12px solid #444;
+  `
+
+  export const FieldStyled = styled.div`
+    width: 100%;
+    height: 100%;
+    background-color: ${(props)=>{
+    //  if(props.field1) return '#3B755F';
+    //  else if(props.field2) return '#E54B4B';
+    //  else if(props.field3) return '#F0CF61';
+    //  else if(props.field4) return '#005397';
+     return props.color;
+    }};
+    cursor: pointer;
   `

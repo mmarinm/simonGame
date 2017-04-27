@@ -1,24 +1,38 @@
 import React from 'react';
-import {Maincircle, Row, FieldStyled} from './MainCircle.styles'
+import {Maincircle, Row, Column, FieldStyled} from './MainCircle.styles'
 import {colors} from '../../App.styles'
 
-const Field = (props) => {
-  return (
-    <FieldStyled {...props} />
-  )
-}
+export const MainCircle = (props) => {
+  const {setFieldState, field1, field2, field3, field4} = props
+  function handleClick(val){
+    console.log(val);
+    setFieldState(val)
+    setTimeout(function () {
+      setFieldState(val)
+    }, 500);
+  }
 
+  function renderField(val, props, color){
+    return <FieldStyled onClick={() => handleClick(val)} {...props} color={color}/>
+  }
 
-export const MainCircle = () => {
   return (
     <Maincircle>
-      <Row>
-        <Field color={colors.green} borderRight="right" borderBottom="bottom"/>
-        <Field color={colors.red} borderLeft="left" borderBottom="bottom"/>
+      <Row border="bottom">
+        <Column border="right">
+          {renderField(0, props, field1 ? colors.activeGreen : colors.green)}
+        </Column>
+        <Column border="left">
+          {renderField(1, props, field2 ? colors.activeRed : colors.red)}
+        </Column>
       </Row>
-      <Row>
-        <Field color={ colors.yellow } borderRight="right" borderTop="top"/>
-        <Field color={ colors.blue } borderLeft="left" borderTop="top"/>
+      <Row border="top">
+        <Column border="right">
+          {renderField(2, props, field3 ? colors.activeYellow : colors.yellow)}
+        </Column>
+        <Column border="left">
+          {renderField(3, props, field4 ? colors.activeBlue : colors.blue)}
+        </Column>
       </Row>
     </Maincircle>
     )

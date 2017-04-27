@@ -5,10 +5,15 @@ import {Switch, SwitchOnOff, OnOffStyled, DisplayBoxDiv, Display, DisplayNumber,
  import {colors} from '../../App.styles'
 
 const SwitchBtn = (props) => {
+  const {gameOn, setStrictMode, setGameStatus, strict} = props
   function handleClick() {
-    const setGame = props.gameOn === true ? false : true
-    const setCount =  props.gameOn === true ? '' : '--';
-    props.setGameStatus(setGame, setCount);
+    const setGame = gameOn ? false : true
+    const setCount =  gameOn ? '' : '--';
+    setGameStatus(setGame, setCount);
+    // if strict is on and you switch the OFF button
+    if(gameOn && strict) {
+      setStrictMode()
+    }
   }
 
   return (
@@ -19,21 +24,29 @@ const SwitchBtn = (props) => {
 }
 
 const OnOffControls = (props) => {
+  const {gameOn, setGameStatus, setStrictMode, strict} = props
   return (
     <OnOffStyled>
       <span>OFF</span>
-      <SwitchBtn gameOn={props.gameOn} setGameStatus={props.setGameStatus}/>
+      <SwitchBtn gameOn={gameOn} setGameStatus={setGameStatus} setStrictMode={setStrictMode} strict={strict}/>
       <span>ON</span>
     </OnOffStyled>
   )
 }
 
 const StartStrictBox = (props) => {
-  const {tag, gameOn, setStartGame} = props
+  const {tag, gameOn, setStartGame, setStrictMode} = props
   function handleClick() {
     if(tag === "START" && gameOn) {
       // start game to flash and start sequence
       setStartGame();
+      //wait for the flash to finish and start with the sequence
+      setTimeout(function () {
+        alert("Sequence generate")
+      }, 4000);
+    }
+    else if(tag ==="STRICT" && gameOn) {
+      setStrictMode()
     }
   }
 
@@ -58,23 +71,24 @@ const DisplayBox = (props) => {
 }
 
 const InlineControls = (props) => {
-  const {count, gameOn, setStartGame, start} = props
+  const {count, gameOn, setStartGame, start, setStrictMode, strict} = props
   return (
     <InlineControlsStyled>
       <DisplayBox count={count} gameOn={gameOn} start={start}/>
       <StartStrictBox gameOn={gameOn} color={colors.red} tag={"START"} setStartGame={setStartGame}/>
-      <StartStrictBox color={colors.yellow} tag={"STRICT"}/>
+      <StartStrictBox color={colors.yellow} tag={"STRICT"} setStrictMode={setStrictMode} gameOn={gameOn} strict={strict}/>
     </InlineControlsStyled>
   )
 }
 
 export const Controler = (props) => {
-  const {setGameStatus, gameOn, count, setStartGame, start} = props
+  const {setGameStatus, gameOn, count, setStartGame, start, setStrictMode, strict} = props
   return (
     <ControlerStyled>
       <h1>Simon<span>®</span></h1>
-      <InlineControls count={count} gameOn={gameOn} setStartGame={setStartGame} start={start}/>
-      <OnOffControls setGameStatus={setGameStatus} gameOn={gameOn} />
+      <InlineControls count={count} gameOn={gameOn} setStartGame={setStartGame} start={start}
+      setStrictMode={setStrictMode} strict={strict}/>
+      <OnOffControls setGameStatus={setGameStatus} gameOn={gameOn} setStrictMode={setStrictMode}  strict={strict}/>
     </ControlerStyled>
   )
 }

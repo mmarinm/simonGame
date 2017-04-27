@@ -63,7 +63,9 @@ export const StartStrictBtn = styled.div`
   cursor:pointer;
   width: 28px;
   height: 28px;
-  border: 4px solid #444;
+  border: 4px solid ${
+    (props) => props.strict ? "red" : "#444"
+  }
   margin: 5px auto 0 auto;
   background-color: ${
     (props) => props.color
