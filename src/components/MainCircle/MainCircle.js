@@ -1,15 +1,19 @@
 import React from 'react';
 import {Maincircle, Row, Column, FieldStyled} from './MainCircle.styles'
 import {colors} from '../../App.styles'
+import{sounds} from '../../App'
 
 export const MainCircle = (props) => {
-  const {setFieldState, field1, field2, field3, field4} = props
+  const {setFieldState, field1, field2, field3, field4, compTurn, setPlayerSequence} = props
   function handleClick(val){
-    console.log(val);
-    setFieldState(val)
-    setTimeout(function () {
-      setFieldState(val)
-    }, 500);
+    if(!compTurn) {
+      setFieldState(val);
+      sounds[val].play();
+      setTimeout(function () {
+        setFieldState(val);
+      }, 500);
+      setPlayerSequence(val);
+    }
   }
 
   function renderField(val, props, color){

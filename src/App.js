@@ -3,9 +3,8 @@ import {MainCircle} from './components/MainCircle/MainCircle'
 import {Controler} from './components/Controler/Controler'
 
 import {Container} from './App.styles'
-import "./App.css"
 
-const sounds = [
+export const sounds = [
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3'),
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
@@ -17,10 +16,11 @@ class App extends Component {
     super();
     this.state= {
       gameOn: false,
-      count: "",
+      count: "--",
       start: false,
       strict: false,
       sequence: [],
+      playerSequence: [],
       compTurn: true,
       field1: false,
       field2: false,
@@ -31,7 +31,12 @@ class App extends Component {
     this.setGameStatus = this.setGameStatus.bind(this);
     this.setStartGame = this.setStartGame.bind(this);
     this.setStrictMode = this.setStrictMode.bind(this);
-    this.setFieldState = this.setFieldState.bind(this)
+    this.restartGame = this.restartGame.bind(this);
+    this.togglePlayer = this.togglePlayer.bind(this);
+    this.setPlayerSequence = this.setPlayerSequence.bind(this);
+    this.generateSequence = this.generateSequence.bind(this);
+    this.setFieldState = this.setFieldState.bind(this);
+    this.compareSequences = this.compareSequences.bind(this);
   }
 
   setGameStatus(val, setCount){
@@ -40,21 +45,60 @@ class App extends Component {
 
   setStartGame(){
     this.setState((prevState) => ({ ...prevState, start: true}));
+    setTimeout(() => {
+      this.setState((prevState) => ({...prevState, count: 1}))
+    }, 2000);
   }
 
   setStrictMode(){
-    this.setState((prevState) => ({...prevState, strict: !prevState.strict}))
+    this.setState((prevState) => ({...prevState, strict: !prevState.strict}));
+  }
+
+  togglePlayer(){
+    this.setState((prevState) => ({...prevState, compTurn: !prevState.compTurn}));
+  }
+
+  restartGame(){
+    this.setState((prevState) => ({
+      gameOn: false,
+      count: "--",
+      start: false,
+      strict: false,
+      sequence: [],
+      playerSequence: [],
+      compTurn: true,
+      field1: false,
+      field2: false,
+      field3: false,
+      field4: false
+    }));
+  }
+
+  setPlayerSequence(newItem){
+    const {playerSequence} = this.state;
+    const newSequence = playerSequence.slice()
+    newSequence.push(newItem)
+    this.setState((prevState) => ({...prevState, playerSequence: newSequence }));
   }
 
   generateSequence(){
     const {sequence} = this.state;
-    const newSequence = sequence.slice().push( Math.floor(Math.random() * 4));
+    const newSequence = sequence.slice()
+    newSequence.push( Math.floor(Math.random() * 4));
     this.setState((prevState) => ({...prevState, sequence: newSequence}));
+    this.showSequence(newSequence);
   }
 
   showSequence(sequence){
     sequence.forEach((fieldVal, index) => {
-      this.setFieldState(fieldVal)
+      this.setFieldState(fieldVal);
+      sounds[fieldVal].play();
+      setTimeout(() => {
+        this.setFieldState(fieldVal);
+      }, 500 );
+      if(sequence.length === 1){
+        this.togglePlayer();
+      }
     })
   }
 
@@ -74,14 +118,32 @@ class App extends Component {
     }
   }
 
+  compareSequences(){
+    const {sequence, playerSequence} = this.state;
+    let newSequence = sequence.slice();
+    newSequence = newSequence.filter((fieldVal, index) => {
+      if(fieldVal !== playerSequence[index]){
+        return false
+      }
+      return true
+    })
+    if(newSequence.length !== playerSequence.length) return false;
+    return true;
+  }
+
+
   render() {
-    const {count, gameOn, start, strict, field1, field2, field3, field4} = this.state;
+    const {count, gameOn, start, strict, field1, field2, field3, field4,
+    compTurn} = this.state;
+
     return (
       <Container>
-        <MainCircle field1={field1} field2={field2} field3={field3} field4={field4} setFieldState={this.setFieldState} />
+        <MainCircle field1={field1} field2={field2} field3={field3} field4={field4} setFieldState={this.setFieldState}
+        compTurn={compTurn} setPlayerSequence={this.setPlayerSequence}
+        compareSequences={this.compareSequences}/>
         <Controler count={count} gameOn={gameOn} setGameStatus={this.setGameStatus}
         setStartGame={this.setStartGame} start={start} setStrictMode={this.setStrictMode}
-        strict={strict} />
+        strict={strict} generateSequence={this.generateSequence} restartGame={this.restartGame}/>
       </Container>
     );
   }

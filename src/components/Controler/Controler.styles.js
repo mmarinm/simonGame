@@ -51,11 +51,12 @@ export const Display = styled.div`
 `
 
 export const DisplayNumber = styled.h1`
+  display: ${(props) => !props.gameOn ? "none" : "block"}
   margin: 0;
   padding: 0;
   animation: ${
   (props) => props.gameOn && props.count === "--" && props.start ? flash : ""
-} 2s 2;
+} 1s 2;
 `
 
 export const StartStrictBtn = styled.div`

@@ -26,12 +26,6 @@ export const Maincircle = styled.div`
   export const FieldStyled = styled.div`
     width: 100%;
     height: 100%;
-    background-color: ${(props)=>{
-    //  if(props.field1) return '#3B755F';
-    //  else if(props.field2) return '#E54B4B';
-    //  else if(props.field3) return '#F0CF61';
-    //  else if(props.field4) return '#005397';
-     return props.color;
-    }};
-    cursor: pointer;
+    background-color: ${(props)=> props.color };
+    cursor: ${(props)=> props.compTurn ? "auto" : "pointer"  };
   `
