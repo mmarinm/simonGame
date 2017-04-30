@@ -95,20 +95,20 @@ class App extends Component {
     const {sequence} = this.state;
     const newSequence = sequence.slice();
     newSequence.push( Math.floor(Math.random() * 4));
-    this.setState((prevState) => ({...prevState, sequence: newSequence}));
-    //sequence doesn't update yet
-    this.showSequence(newSequence);
+    this.setState((prevState) => ({...prevState, sequence: newSequence}), this.showSequence(newSequence));
+    // this.setState((prevState) => ({...prevState, sequence: newSequence}));
+    //state doesn't update yet
+    // this.showSequence(newSequence);
 
   }
 
   showSequence(sequence){
     this.setState((prevState) => ({...prevState, compTurn: true, showing:true }));
-    let timeDelayed = 0, frequency = 1000 - sequence.length * 20;
+    const frequency = 1000;
 
     sequence.forEach((val, i) => {
-      timeDelayed = Math.max(i * frequency, timeDelayed);
       if(val === 0){
-        setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency);
+        setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency); //
         setTimeout(() => this.setFieldState(val), i * frequency + 500);
       } else if(val === 1){
         setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency);
@@ -121,9 +121,9 @@ class App extends Component {
         setTimeout(() => this.setFieldState(val), i * frequency + 500);
       }
     });
-    setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), timeDelayed);
-  }
 
+    setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), sequence.length * 1000);
+  }
 
   restartGame(){
     this.setState((prevState) => ({
@@ -150,7 +150,7 @@ class App extends Component {
     }, 2001);
   }
 
-  //every field has it's own state that gets changed onClick or when showing sequence
+
   setFieldState(val){
     if(val === 0){
       this.setState((prevState) => ({...prevState, field1: !prevState.field1}));
@@ -189,9 +189,8 @@ class App extends Component {
       if(sequence.length  === newPlayerSequence.length){
         this.setState((prevState) => ({...prevState,
           playerSequence: [],
-          compTurn: true,
-          count: 'cool'
-        }));
+          count: ':)'
+        }), (prevState) => ({...prevState, compTurn: true,}));
         setTimeout(() => {
           this.gameLogic(true);
         }, 2001);
@@ -241,7 +240,7 @@ class App extends Component {
     return (
       <Container>
         <MainCircle field1={field1} field2={field2} field3={field3} field4={field4} handleFieldBtn={this.handleFieldBtn}
-        compTurn={compTurn} showing={showing}/>
+        compTurn={compTurn} showing={showing} count={count}/>
         <Controler count={count} gameOn={gameOn} start={start} strict={strict} handleStartBtn={this.handleStartBtn}
         handleSwitchOnOffBtn={this.handleSwitchOnOffBtn} handleStrictBtn={this.handleStrictBtn} />
       </Container>

@@ -3,9 +3,9 @@ import {Maincircle, Row, Column, FieldStyled} from './MainCircle.styles'
 import {colors} from '../../App.styles'
 
 export const MainCircle = (props) => {
-  const {field1, field2, field3, field4, handleFieldBtn, showing} = props
+  const {field1, field2, field3, field4, handleFieldBtn, showing, count} = props
   function handleClick(val){
-    if(!showing && field1 === false && field2 === false && field3 === false && field4 === false) {
+    if(!showing && field1 === false && field2 === false && field3 === false && field4 === false && count!=='!!!') {
       handleFieldBtn(val);
     }
   }

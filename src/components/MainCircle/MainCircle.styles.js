@@ -37,5 +37,5 @@ export const Maincircle = styled.div`
     height: 100%;
     background-color: ${(props)=> props.color };
     cursor: ${(props)=> props.compTurn && props.showing? "auto" : "pointer"  };
-    animation: ${(props) =>  props.animate ? flash : "" } 0.5s;
+    animation: ${(props) =>  props.animate ? flash : "" } ${(props) => props.compTurn ? "0.5s" : "0.1s"};
   `
