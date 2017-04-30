@@ -1,4 +1,14 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const flash = keyframes`
+   0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.7;
+  }
+`;
 
 export const Maincircle = styled.div`
   border-radius: 50%;
@@ -17,7 +27,6 @@ export const Maincircle = styled.div`
       props.border }: 12px solid #444;
   `
   export const Column = styled.div`
-    background-color: red;
     width: 50%;
     border-${(props) =>
       props.border }: 12px solid #444;
@@ -27,5 +36,6 @@ export const Maincircle = styled.div`
     width: 100%;
     height: 100%;
     background-color: ${(props)=> props.color };
-    cursor: ${(props)=> props.compTurn ? "auto" : "pointer"  };
+    cursor: ${(props)=> props.compTurn && props.showing? "auto" : "pointer"  };
+    animation: ${(props) =>  props.animate ? flash : "" } 0.5s;
   `

@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components'
 
-const flash = keyframes`
+const blink = keyframes`
    0% {
     opacity: 1;
   }
@@ -55,7 +55,7 @@ export const DisplayNumber = styled.h1`
   margin: 0;
   padding: 0;
   animation: ${
-  (props) => props.gameOn && props.count === "--" && props.start ? flash : ""
+  (props) => props.count === "!!!"  || (props.gameOn && props.count === "--" && props.start) ? blink : ""
 } 1s 2;
 `
 

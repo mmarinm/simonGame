@@ -1,14 +1,10 @@
 import styled from 'styled-components'
 
 export const colors={
-  green: "#00ff00",
-  activeGreen:"#3B755F",
+  green: "#00A74A",
   red: "#9F0F17",
-  activeRed:"#E54B4B",
   yellow: "#CCA707",
-  activeYellow:"#F0CF61",
-  activeBlue: "#094A8F",
-  blue: "#00d0f9"
+  blue: "#094A8F"
 }
 
 export const Container = styled.div`
