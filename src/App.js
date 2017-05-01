@@ -8,7 +8,9 @@ const sounds = [
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3'),
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
-  new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3')
+  new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3'),
+  new Audio(require('../assets/Buzz-SoundBible.com-1790490578.mp3')),
+  new Audio(require('../assets/Ta Da-SoundBible.com-1884170640.mp3'))
 ];
 
 class App extends Component {
@@ -36,7 +38,7 @@ class App extends Component {
     this.generateSequence = this.generateSequence.bind(this);
     this.setFieldState = this.setFieldState.bind(this);
     this.checkVal = this.checkVal.bind(this);
-    this.gameLogic = this.gameLogic.bind(this);
+    this.gameStatus = this.gameStatus.bind(this);
     this.showError = this.showError.bind(this);
     this.isGameOver = this.isGameOver.bind(this);
     this.handleSwitchOnOffBtn = this.handleSwitchOnOffBtn.bind(this);
@@ -46,20 +48,33 @@ class App extends Component {
   }
 
   setGameStatus(val){
-    this.setState((prevState) => ({ ...prevState, gameOn: val}));
+    this.setState((prevState) => ({
+        gameOn: val,
+        count: "--",
+        start: false,
+        strict: false,
+        sequence: [],
+        playerSequence: [],
+        compTurn: true,
+        field1: false,
+        field2: false,
+        field3: false,
+        field4: false,
+        showing:false
+    }));
   }
 
   isGameOver(){
     const {count} = this.state;
-    return count === 20 ? true : false
+    return count === 3 ? true : false
   }
 
   setStartGame(){
     this.setState((prevState) => ({ ...prevState, start: true}));
     //wait 2 seconds for flash effect
     setTimeout(() => {
-      this.gameLogic();
-    }, 2001);
+      this.gameStatus();
+    }, 2000);
   }
 
   setStrictMode(){
@@ -67,22 +82,26 @@ class App extends Component {
   }
 
 
-  gameLogic(compTurn = this.state.compTurn){
+  gameStatus(compTurn = this.state.compTurn){
     if(this.isGameOver()){
+      sounds[5].play()
      this.setState((prevState) => ({
-         gameOn: false,
-         count: "WIN!",
+         gameOn: true,
+         count: "WIN",
          start: false,
          strict: false,
          sequence: [],
          playerSequence: [],
-         compTurn: true,
+         compTurn: false,
          field1: false,
          field2: false,
          field3: false,
          field4: false,
          showing: false
        }));
+       setTimeout(function () {
+         //restartGame
+       }, 2000);
     } else {
       if(compTurn){
         this.generateSequence();
@@ -95,10 +114,9 @@ class App extends Component {
     const {sequence} = this.state;
     const newSequence = sequence.slice();
     newSequence.push( Math.floor(Math.random() * 4));
-    this.setState((prevState) => ({...prevState, sequence: newSequence}), this.showSequence(newSequence));
-    // this.setState((prevState) => ({...prevState, sequence: newSequence}));
-    //state doesn't update yet
-    // this.showSequence(newSequence);
+    this.setState((prevState) => ({...prevState, sequence: newSequence}));
+    // state doesn't update yet
+    this.showSequence(newSequence);
 
   }
 
@@ -107,19 +125,8 @@ class App extends Component {
     const frequency = 1000;
 
     sequence.forEach((val, i) => {
-      if(val === 0){
-        setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency); //
-        setTimeout(() => this.setFieldState(val), i * frequency + 500);
-      } else if(val === 1){
-        setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency);
-        setTimeout(() => this.setFieldState(val), i * frequency + 500);
-      } else if(val === 2){
-        setTimeout(() =>{sounds[val].play(); this.setFieldState(val);}, i * frequency);
-        setTimeout(() => this.setFieldState(val), i * frequency + 500);
-      } else {
-        setTimeout(() =>{sounds[val].play(); this.setFieldState(val);}, i * frequency);
-        setTimeout(() => this.setFieldState(val), i * frequency + 500);
-      }
+      setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency); //
+      setTimeout(() => this.setFieldState(val), i * frequency + 500);
     });
 
     setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), sequence.length * 1000);
@@ -144,10 +151,11 @@ class App extends Component {
 
 
   showError(){
+    sounds[4].play();
     this.setState((prevState) => ({...prevState, count: "!!!"}));
     setTimeout(() => {
       this.setState((prevState) => ({...prevState, count: prevState.sequence.length}));
-    }, 2001);
+    }, 2000);
   }
 
 
@@ -173,7 +181,7 @@ class App extends Component {
   }
 
   listenInput(newItem){
-    const {sequence, playerSequence} = this.state;
+    const {sequence, playerSequence, strict, count} = this.state;
     const newPlayerSequence = playerSequence.slice()
     newPlayerSequence.push(newItem)
     this.setState((prevState) => ({...prevState, playerSequence: newPlayerSequence }));
@@ -181,19 +189,38 @@ class App extends Component {
     if(!this.checkVal(newPlayerSequence, sequence)){
       this.showError();
       this.setState((prevState) => ({...prevState, playerSequence: [] }));
-      //repeat the sequence after 2 seconds
-      setTimeout(() => {
-        this.showSequence(sequence);
-      }, 2001);
+      if (strict) {
+        // repeat the sequence after 2 seconds, show error effect takes 2 seconds
+        setTimeout(() => {
+          this.restartGame();
+          this.setGameStatus(true);
+        }, 2000);
+        // i don't know why I neeed delay here
+        setTimeout(() => {
+          this.setStartGame();
+        }, 3000);
+
+        } else {
+        // repeat the sequence after 2 seconds, show error effect takes 2 seconds
+        setTimeout(() => {
+          this.showSequence(sequence);
+        }, 2000);
+      }
     } else {
       if(sequence.length  === newPlayerSequence.length){
+        const currentCount = count;
         this.setState((prevState) => ({...prevState,
           playerSequence: [],
           count: ':)'
-        }), (prevState) => ({...prevState, compTurn: true,}));
+        }));
+        // set back the count to number that can be evaluated by isGameOver function
+        // it happens just one millisecond before newSequence is rendered so it is invisible to human eye
         setTimeout(() => {
-          this.gameLogic(true);
-        }, 2001);
+          this.setState((prevState) => ({...prevState, count: currentCount}))
+        }, 1999)
+        setTimeout(() => {
+          this.gameStatus(true);
+        }, 2000);
       }
     }
   }
@@ -229,7 +256,7 @@ class App extends Component {
       this.setFieldState(val);
       setTimeout(() => {
         this.setFieldState(val);
-      }, 501);
+      }, 500);
       this.listenInput(val);
     }
   }
