@@ -4,6 +4,8 @@ import {Controler} from './components/Controler/Controler'
 
 import {Container} from './App.styles'
 
+
+
 const sounds = [
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3'),
@@ -47,6 +49,16 @@ class App extends Component {
     this.handleFieldBtn = this.handleFieldBtn.bind(this);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if(this.state.gameOn !== nextState.gameOn){
+      if(!nextState.gameOn){
+        alert("cancel timeout");
+        //if animation is running and you turn the swith off
+        //cancet the animation
+      }
+    }
+  }
+
   setGameStatus(val){
     this.setState((prevState) => ({
         gameOn: val,
@@ -66,7 +78,7 @@ class App extends Component {
 
   isGameOver(){
     const {count} = this.state;
-    return count === 3 ? true : false
+    return count === 20 ? true : false
   }
 
   setStartGame(){
@@ -79,6 +91,17 @@ class App extends Component {
 
   setStrictMode(){
     this.setState((prevState) => ({...prevState, strict: !prevState.strict}));
+  }
+
+  restartGame(){
+    // repeat the sequence after 2 seconds, show error or winn effect takes 2 seconds
+    setTimeout(() => {
+      this.setGameStatus(true);
+    }, 2000);
+    // i don't know why I neeed delay here
+    setTimeout(() => {
+      this.setStartGame();
+    }, 3000);
   }
 
 
@@ -99,8 +122,9 @@ class App extends Component {
          field4: false,
          showing: false
        }));
-       setTimeout(function () {
+       setTimeout(() => {
          //restartGame
+         this.restartGame();
        }, 2000);
     } else {
       if(compTurn){
@@ -131,24 +155,6 @@ class App extends Component {
 
     setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), sequence.length * 1000);
   }
-
-  restartGame(){
-    this.setState((prevState) => ({
-      gameOn: false,
-      count: "--",
-      start: false,
-      strict: false,
-      sequence: [],
-      playerSequence: [],
-      compTurn: true,
-      field1: false,
-      field2: false,
-      field3: false,
-      field4: false,
-      showing:false
-    }));
-  }
-
 
   showError(){
     sounds[4].play();
@@ -190,16 +196,7 @@ class App extends Component {
       this.showError();
       this.setState((prevState) => ({...prevState, playerSequence: [] }));
       if (strict) {
-        // repeat the sequence after 2 seconds, show error effect takes 2 seconds
-        setTimeout(() => {
           this.restartGame();
-          this.setGameStatus(true);
-        }, 2000);
-        // i don't know why I neeed delay here
-        setTimeout(() => {
-          this.setStartGame();
-        }, 3000);
-
         } else {
         // repeat the sequence after 2 seconds, show error effect takes 2 seconds
         setTimeout(() => {
@@ -236,7 +233,7 @@ class App extends Component {
       this.setStrictMode()
     }
     else if(gameOn){
-      this.restartGame();
+      this.setGameStatus(false);
     }
   }
 
