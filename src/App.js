@@ -16,7 +16,7 @@ injectGlobal`
 	}
 `;
 
-
+const timeOuts=[]
 
 const sounds = [
   new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
@@ -101,9 +101,9 @@ class App extends Component {
   componentWillUpdate(nextProps, nextState) {
     if(this.state.gameOn !== nextState.gameOn){
       if(!nextState.gameOn){
-        alert("cancel timeout");
         //if animation is running and you turn the switch off
         //cancel the timeout that triggers animation
+					timeOuts.forEach((val) => clearTimeout(val))
       }
     }
   }
@@ -156,14 +156,15 @@ class App extends Component {
     this.setState((prevState) => ({...prevState, sequence: newSequence}));
     // state doesn't update yet
     // timeout is filty hack to update count state in show sequence from -- to 1
-    setTimeout(() => {
+    timeOuts.push(setTimeout(() => {
       this.showSequence(newSequence);
-    });
+    }));
 
   }
 
   showSequence(sequence){
     const {count} = this.state;
+
     this.setState((prevState) => ({...prevState, compTurn: true, showing:true }));
     const frequency = (count) => {
       if(count > 9) return 500
@@ -171,9 +172,9 @@ class App extends Component {
       return 1000;
     }
 
-    sequence.forEach((val, i) => {
-      setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency(count)); //
-      setTimeout(() => this.setFieldState(val), i * frequency(count) + 500);
+	  sequence.forEach((val, i) => {
+      timeOuts.push(setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency(count)));
+      timeOuts.push(setTimeout(() => this.setFieldState(val), i * frequency(count) + 500));
     });
 
     setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), sequence.length * frequency(count));
