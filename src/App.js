@@ -3,6 +3,18 @@ import {MainCircle} from './components/MainCircle/MainCircle'
 import {Controler} from './components/Controler/Controler'
 
 import {Container} from './App.styles'
+import { injectGlobal } from 'styled-components';
+
+injectGlobal`
+	@font-face {
+	  src: url('https://fonts.googleapis.com/css?family=Norican');
+    src: url('https://fonts.googleapis.com/css?family=Alfa+Slab+One|VT323|Oswald');
+	}
+
+	body {
+		margin: 0;
+	}
+`;
 
 
 
@@ -14,6 +26,8 @@ const sounds = [
   new Audio(require('../assets/Buzz-SoundBible.com-1790490578.mp3')),
   new Audio(require('../assets/Ta Da-SoundBible.com-1884170640.mp3'))
 ];
+
+
 
 class App extends Component {
   constructor(props){
@@ -49,15 +63,6 @@ class App extends Component {
     this.handleFieldBtn = this.handleFieldBtn.bind(this);
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if(this.state.gameOn !== nextState.gameOn){
-      if(!nextState.gameOn){
-        alert("cancel timeout");
-        //if animation is running and you turn the swith off
-        //cancet the animation
-      }
-    }
-  }
 
   setGameStatus(val){
     this.setState((prevState) => ({
@@ -91,6 +96,16 @@ class App extends Component {
 
   setStrictMode(){
     this.setState((prevState) => ({...prevState, strict: !prevState.strict}));
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if(this.state.gameOn !== nextState.gameOn){
+      if(!nextState.gameOn){
+        alert("cancel timeout");
+        //if animation is running and you turn the switch off
+        //cancel the animation
+      }
+    }
   }
 
   restartGame(){
@@ -140,20 +155,30 @@ class App extends Component {
     newSequence.push( Math.floor(Math.random() * 4));
     this.setState((prevState) => ({...prevState, sequence: newSequence}));
     // state doesn't update yet
-    this.showSequence(newSequence);
+    // timeout is filty hack to update count state in show sequence from -- to 1
+    setTimeout(() => {
+      this.showSequence(newSequence);
+    });
 
   }
 
   showSequence(sequence){
+    const {count} = this.state;
     this.setState((prevState) => ({...prevState, compTurn: true, showing:true }));
-    const frequency = 1000;
+    const frequency = (count) => {
+      if(count > 4) return 500
+      if(count > 2) return 750;
+      return 1000;
+    }
+    console.log(count);
+    console.log(frequency(count));
 
     sequence.forEach((val, i) => {
-      setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency); //
-      setTimeout(() => this.setFieldState(val), i * frequency + 500);
+      setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency(count)); //
+      setTimeout(() => this.setFieldState(val), i * frequency(count) + 500);
     });
 
-    setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), sequence.length * 1000);
+    setTimeout(()=>this.setState((prevState) => ({...prevState, compTurn: false, showing: false})), sequence.length * frequency(count));
   }
 
   showError(){
@@ -214,7 +239,7 @@ class App extends Component {
         // it happens just one millisecond before newSequence is rendered so it is invisible to human eye
         setTimeout(() => {
           this.setState((prevState) => ({...prevState, count: currentCount}))
-        }, 1999)
+        }, 1990)
         setTimeout(() => {
           this.gameStatus(true);
         }, 2000);

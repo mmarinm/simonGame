@@ -18,6 +18,7 @@ export const Maincircle = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0px 1px 25px 4px rgba(0,0,0,0.56);
   `
   export const Row = styled.div`
     display: flex;

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {Switch, SwitchOnOff, OnOffStyled, DisplayBoxDiv, Display, DisplayNumber,
- InlineControlsStyled, Label, StartStrictBtn, ControlerStyled} from './Controler.styles'
+ InlineControlsStyled, Label, StartStrictBtn, ControlerStyled, ControlerHeader, ControlerSpan} from './Controler.styles'
  import {colors} from '../../App.styles'
 
 const SwitchBtn = (props) => {
@@ -74,7 +74,7 @@ export const Controler = (props) => {
   const { gameOn, count,  start,  strict, handleStartBtn, handleStrictBtn, handleSwitchOnOffBtn } = props
   return (
     <ControlerStyled>
-      <h1>Simon<span>®</span></h1>
+      <ControlerHeader>Simon<ControlerSpan>®</ControlerSpan></ControlerHeader>
       <InlineControls count={count} gameOn={gameOn}  start={start} handleStartBtn={handleStartBtn}
       strict={strict} handleStrictBtn={handleStrictBtn} />
       <OnOffControls gameOn={gameOn} handleSwitchOnOffBtn={handleSwitchOnOffBtn}/>

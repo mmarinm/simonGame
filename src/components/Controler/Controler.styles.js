@@ -19,10 +19,23 @@ export const ControlerStyled = styled.div`
   position: absolute;
   border-radius: 50%;
   background-color: #ECE7EE;
-  height: 200px;
-  width: 200px;
+  height: 220px;
+  width: 220px;
   border: 12px solid #444;
   text-align:center;
+`
+export const ControlerHeader = styled.h1`
+  font-family: 'Alfa Slab One', cursive;
+  color : #222;
+  font-size: 3.2em;
+  margin: 15px 0 5px 0;
+
+`
+export const ControlerSpan = styled.span`
+  font-size: 0.4em;
+  position: absolute;
+  top: 27px;
+  left: 175px;
 `
 
 export const InlineControlsStyled = styled.div`
@@ -35,10 +48,11 @@ export const DisplayBoxDiv = styled.div`
 `
 
 export const Label = styled.h3`
+  font-family: 'Norican', cursive;
   color: #222;
-  font-size: 0.7em;
   margin-top: 5px;
   margin-bottom: 0;
+  font-size: 0.8em;
 `
 
 export const Display = styled.div`
@@ -46,13 +60,14 @@ export const Display = styled.div`
   color: #DC0A16;
   border: 3px solid #444;
   border-radius: 20%;
-  margin: 0;
+  font-size: 0.8em;
   height: 35px;
+  width: 50px;
 `
 
 export const DisplayNumber = styled.h1`
   display: ${(props) => !props.gameOn ? "none" : "block"}
-  margin: 0;
+  margin-top: 5px;
   padding: 0;
   animation: ${
   (props) => props.count === "!!!"  || (props.gameOn && props.count === "--" && props.start) ? blink : ""
@@ -75,6 +90,8 @@ export const StartStrictBtn = styled.div`
 
 export const OnOffStyled = styled.div`
   height: 45px;
+  margin-top: 5px;
+  font-family: 'Norican', cursive;
   display: flex;
   justify-content: center;
   align-items: center;
