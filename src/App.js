@@ -103,7 +103,7 @@ class App extends Component {
       if(!nextState.gameOn){
         alert("cancel timeout");
         //if animation is running and you turn the switch off
-        //cancel the animation
+        //cancel the timeout that triggers animation
       }
     }
   }
@@ -166,12 +166,10 @@ class App extends Component {
     const {count} = this.state;
     this.setState((prevState) => ({...prevState, compTurn: true, showing:true }));
     const frequency = (count) => {
-      if(count > 4) return 500
-      if(count > 2) return 750;
+      if(count > 9) return 500
+      if(count > 4) return 750;
       return 1000;
     }
-    console.log(count);
-    console.log(frequency(count));
 
     sequence.forEach((val, i) => {
       setTimeout(() => {sounds[val].play(); this.setFieldState(val);}, i * frequency(count)); //
