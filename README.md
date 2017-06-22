@@ -5,7 +5,7 @@ It's also my last project for FreeCodeCamp front end certificate.
 
 
 ## Live
-[Live](http://codepen.io/marinm/full/gWPGNQ/)
+[Live](https://mmarinm.github.io/simonGame/)
 
 
 ## Credits
