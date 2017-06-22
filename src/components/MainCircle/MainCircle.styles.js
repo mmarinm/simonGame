@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components'
+import media from '../theme/media'
 
 const flash = keyframes`
    0% {
@@ -19,6 +20,12 @@ export const Maincircle = styled.div`
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0px 1px 25px 4px rgba(0,0,0,0.56);
+  
+  ${media.phone`
+    height: 300px;
+    width: 300px;
+    border: 10px solid #444;
+  `}
   `
   export const Row = styled.div`
     display: flex;
